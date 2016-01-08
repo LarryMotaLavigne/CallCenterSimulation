@@ -13,9 +13,10 @@ public class Main {
     int appel_arrives; // Nombre d'appels arrivés
     int appel_traites; // Nombre d'appels traités
 
+    int n_courrielNuit; // Nombre de courriels reçu dans la nuit
 
-    List<Integer> bureau_appels_telephoniques = new ArrayList<Integer>();
-    List<Integer> bureau_courriels = new ArrayList<Integer>();
+    List<Teleconseiller> bureau_appels_telephoniques = new ArrayList<Teleconseiller>();
+    List<Teleconseiller> bureau_courriels = new ArrayList<Teleconseiller>();
 
 
     float date_simu;
@@ -24,12 +25,12 @@ public class Main {
     Random rand = new Random();
 
     void depart(int Nc, int Nat){
-        // Ajout des téléconseillers (avoir s'il ne faut pas créer une classe téléconseiller
+        // Ajout des téléconseillers
         for (int i = 0; i < Nc; i++) {
-            bureau_appels_telephoniques.add(i);
+            bureau_appels_telephoniques.add(new Teleconseiller(i));
         }
         for (int i = Nc; i < Nat + Nc; i++) {
-            bureau_courriels.add(i);
+            bureau_courriels.add(new Teleconseiller(i));
         }
         n_aOccupe = 0;
         n_cOccupe = 0;
@@ -40,8 +41,10 @@ public class Main {
         date_simu = 0;
         date_derniereSimu = 0;
 
-        rand.nextInt(61) + 20
+        Evenement.fin();
 
+        n_courrielNuit = rand.nextInt(61) + 20
+        Evenement.arrivee_at =
     }
 
 }
