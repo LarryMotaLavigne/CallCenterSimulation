@@ -7,13 +7,21 @@ import java.util.TreeMap;
  * Created by Larry on 08/01/2016.
  */
 public class Timing {
-    TreeMap<Integer, Evenement> time = new TreeMap<Integer, Evenement>(Comparator.<Integer>naturalOrder());
+    private static TreeMap<Integer, Integer> time = new TreeMap<Integer, Integer>(Comparator.<Integer>naturalOrder());
+    private static int endSimulation;
 
+    static void addNewEvenement(Integer idEvent, Integer date){
+        time.put(date,idEvent);
+    }
 
-    Evenement getNextEvenement() {
-        Evenement event = time.firstEntry().getValue();
-        System.out.println("Evenement " + event.nom + " d'une durée de " + event.duree + " a lieu.");
-        return event;
+    static Integer getNextEvenement() {
+        Integer idEvent = time.firstEntry().getValue();
+        Integer key = time.firstEntry().getKey();
+
+        System.out.println("Evenement " + "" + " d'une durée de " + "event.duree" + " a lieu.");
+        time.remove(time.firstEntry().getKey());
+        
+        return idEvent;
     }
 
 }
