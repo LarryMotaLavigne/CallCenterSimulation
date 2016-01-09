@@ -3,7 +3,7 @@
  */
 public class Teleconseiller {
 
-    private final int id;
+    final int id;
 
     public Teleconseiller(int id) {
         this.id = id;

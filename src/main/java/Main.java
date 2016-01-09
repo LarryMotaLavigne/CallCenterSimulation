@@ -9,12 +9,11 @@ public class Main {
     public static void main(String[] args){
         Evenement.depart();
 
-        while(Evenement.isEnd){
+        while(!Evenement.isEnd){
             int idEvent = Timing.getNextEvenement();
             Evenement.run(idEvent);
         }
+
+        Statistique.run();
     }
-
-
-
 }

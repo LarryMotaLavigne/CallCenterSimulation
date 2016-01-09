@@ -4,47 +4,49 @@ import java.util.ArrayList;
  * Created by Larry on 08/01/2016.
  */
 public class Evenement {
-    static ArrayList<Teleconseiller> bureau_appels_telephoniques;
-    static ArrayList<Teleconseiller> bureau_courriels;
+    /****************************************************/
+    /**                 ID DES EVENEMENTS              **/
+    /****************************************************/
+    final static int EvenementDepart = 0;
+    final static int EvenementArriveeAppelTelephonique = 1;
+    final static int EvenementArriveeCourriel = 2;
+    final static int EvenementReponseAppelTelephonique = 3;
+    final static int EvenementReponseCourriel = 4;
+    final static int EvenementFin = 5;
 
+
+    /****************************************************/
+    /**                     VARIABLES                  **/
+    /****************************************************/
+    static ArrayList<Teleconseiller> bureau_appels_telephoniques = new ArrayList<>();
+    static ArrayList<Teleconseiller> bureau_courriels = new ArrayList<>();
     static int Nc = 5;
     static int Nat = 5;
-
     static boolean isEnd = false;
+    static float dateFinSimu = 240;
+    static int n_aOccupe = 0; // Nombre de téléconseillers affectés aux appels téléphoniques
+    static int n_cOccupe = 0; // Nombre de téléconseillers affectés aux courriels
+    static float date_simu = 0;
+    static float date_derniereSimu = 0;
 
-    static int n_aOccupe; // Nombre de téléconseillers affectés aux appels téléphoniques
-    static int n_cOccupe; // Nombre de téléconseillers affectés aux courriels
-
-    static int courriel_arrives; // Nombre de courriels arrivés
-    static int courriel_traites; // Nombre de courriels traités
-
-    static int appel_arrives; // Nombre d'appels arrivés
-    static int appel_traites; // Nombre d'appels traités
-
-    static int n_courrielNuit; // Nombre de courriels reçu dans la nuit
-
-    static float date_simu;
-    static float date_derniereSimu;
-
-
-    static void run(int idEvent){
-        switch (idEvent){
-            case 0:
+    static void run(int idEvent) {
+        switch (idEvent) {
+            case EvenementDepart:
                 depart();
                 break;
-            case 1:
+            case EvenementArriveeAppelTelephonique:
                 arriveeAppelTelephonique();
                 break;
-            case 2:
+            case EvenementArriveeCourriel:
                 arriveeCourriel();
                 break;
-            case 3:
+            case EvenementReponseAppelTelephonique:
                 reponseAppelTelephonique();
                 break;
-            case 4:
+            case EvenementReponseCourriel:
                 reponseCourriel();
                 break;
-            case 5:
+            case EvenementFin:
                 fin();
                 break;
             default:
@@ -52,46 +54,83 @@ public class Evenement {
         }
     }
 
-    static void depart(){
-            // Ajout des téléconseillers
-            for (int i = 0; i < Nc; i++) {
-                
-                bureau_appels_telephoniques.add(new Teleconseiller(i));
-            }
-            for (int i = Nc; i < Nat + Nc; i++) {
-                bureau_courriels.add(new Teleconseiller(i));
-            }
-            n_aOccupe = 0;
-            n_cOccupe = 0;
-            courriel_arrives = 0;
-            courriel_traites = 0;
-            appel_arrives = 0;
-            appel_traites = 0;
-            date_simu = 0;
-            date_derniereSimu = 0;
+    static String displayEvenementName(int idEvent) {
+        switch (idEvent) {
+            case EvenementDepart:
+                return "EvenementDepart";
+            case EvenementArriveeAppelTelephonique:
+                return "arriveeAppelTelephonique";
+            case EvenementArriveeCourriel:
+                return "arriveeCourriel";
+            case EvenementReponseAppelTelephonique:
+                return "reponseAppelTelephonique";
+            case EvenementReponseCourriel:
+                return "reponseCourriel";
+            case EvenementFin:
+                return "fin";
+            default:
+                return "";
+        }
+    }
 
-            Evenement.fin();
-
-            n_courrielNuit = Generateur.loi_uniforme(20,80);
+    static void depart() {
+        System.out.println("-> " + new Object() {
+        }.getClass().getEnclosingMethod().getName());
+        // Initialisation des téléconseillers
+        for (int i = 0; i < Nc; i++) {
+            bureau_appels_telephoniques.add(new Teleconseiller(i));
+        }
+        for (int i = Nc; i < Nat + Nc; i++) {
+            bureau_courriels.add(new Teleconseiller(i));
         }
 
-    static void arriveeAppelTelephonique(){
+        // Génération de l'événement de FIN
+        Timing.addNewEvenement(dateFinSimu, EvenementFin);
+
+
+        // Génération des événements pour le courriel de nuit
+        Statistique.n_courrielNuit = Generateur.loi_uniforme(20, 80);
+        for (int i = 0; i < Statistique.n_courrielNuit; i++) {
+            Timing.addNewEvenement(date_simu, EvenementArriveeCourriel);
+        }
+
+        // Génération de l'événement aléatoire d'arrivée d'un appel téléphonique
+        float t_at = Generateur.loi_exponentielle_appelTelephonique(date_simu);
+        Timing.addNewEvenement(date_simu + t_at, EvenementArriveeAppelTelephonique);
+
+        // Génération de l'événement aléatoire de d'arrivée de courriel
+        float t_c = Generateur.loi_exponentielle_courriel(date_simu);
+        Timing.addNewEvenement(date_simu + t_c, EvenementArriveeCourriel);
 
     }
 
-    static void arriveeCourriel(){
+    static void arriveeAppelTelephonique() {
+        System.out.println("-> " + new Object() {
+        }.getClass().getEnclosingMethod().getName());
 
     }
 
-    static void reponseAppelTelephonique(){
+    static void arriveeCourriel() {
+        System.out.println("-> " + new Object() {
+        }.getClass().getEnclosingMethod().getName());
 
     }
 
-    static void reponseCourriel(){
+    static void reponseAppelTelephonique() {
+        System.out.println("-> " + new Object() {
+        }.getClass().getEnclosingMethod().getName());
 
     }
 
-    static void fin(){
+    static void reponseCourriel() {
+        System.out.println("-> " + new Object() {
+        }.getClass().getEnclosingMethod().getName());
 
+    }
+
+    static void fin() {
+        System.out.println("-> " + new Object() {
+        }.getClass().getEnclosingMethod().getName());
+        isEnd = true;
     }
 }

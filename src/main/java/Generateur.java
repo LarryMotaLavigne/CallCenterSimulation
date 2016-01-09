@@ -12,8 +12,26 @@ public class Generateur {
 
     }
 
-    public static double loi_exponentielle(double lambda) {
-        return -(1 / lambda) * Math.log( 1 - rand.nextDouble() );
+    public static float loi_exponentielle(double lambda) {
+        return (float) (-(1 / lambda) * Math.log( 1 - rand.nextDouble() ));
     }
 
+    public static float loi_exponentielle_appelTelephonique(float date){
+        if(date <=60){
+            return loi_exponentielle(1./5);
+        }
+        else if(date <=180){
+            return loi_exponentielle(1.);
+        }else{
+            return loi_exponentielle(1./10);
+        }
+    }
+
+    public static float loi_exponentielle_courriel(float date){
+        if(date <= 60){
+            return loi_exponentielle(2.);
+        }else{
+            return loi_exponentielle(1./5);
+        }
+    }
 }
