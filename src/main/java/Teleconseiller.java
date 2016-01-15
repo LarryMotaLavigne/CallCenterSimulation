@@ -9,6 +9,7 @@ public class Teleconseiller {
     float tempsDeTravail_AppelTelephonique;
     boolean isOccupe;
     boolean isAffecteCourriel;
+    float datefintache;
 
     public Teleconseiller(int id,boolean affecteCourriel) {
         this.id = id;

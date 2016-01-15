@@ -6,7 +6,7 @@ public class ArriveeCourriel extends Event {
     public void run() {
         Entite newCourriel = new Entite();
         newCourriel.heure_arrivee = Statistique.date_simu;
-        Statistique.list_courriel.add(Statistique.list_courriel.size(),newCourriel); // Insertion à la fin
+        Statistique.courriel_enAttente.add(Statistique.courriel_enAttente.size(), newCourriel); // Insertion à la fin
 
         // Génération d'une nouvelle arrivée de Courriel
         float t_c = Generateur.loi_exponentielle_courriel(Statistique.date_simu);
@@ -14,45 +14,20 @@ public class ArriveeCourriel extends Event {
 
 
         // Génération d'un nouveau départ de Courriel
-        boolean isAttributed = false;
-        // On regarde si un teleconseiller courriel est présent
-        for (int i = 0; i < Statistique.N; i++) {
-            if(Statistique.bureau.get(i).isAffecteCourriel && !Statistique.bureau.get(i).isOccupe) {
-                Statistique.bureau.get(i).isOccupe = true;
-                isAttributed = true;
-            }
-        }
-        // Si tous les teleconseillers Courriel sont pris, on regarde du coté des AT
-        if(!isAttributed){
-            for (int i = 0; i < Statistique.N; i++) {
-                if(!Statistique.bureau.get(i).isAffecteCourriel && !Statistique.bureau.get(i).isOccupe) {
-                    Statistique.bureau.get(i).isAffecteCourriel = true;
-                    Statistique.bureau.get(i).isOccupe = true;
-                    isAttributed = true;
-                }
-            }
-        }
-        if(!isAttributed){
-            // Tous les conseillers sont occupés
-        }
+        int id = Statistique.getTeleconseillerCourriel();
 
-        if(Statistique.n_cOccupe > Statistique.Nc){
-
-        }else{
+        // Un téléconseiller est disponible
+        if (id != -1) {
             Statistique.n_cOccupe++;
+            float t = Generateur.loi_uniforme(3, 7);
+            Statistique.bureau.get(id).datefintache = Statistique.date_simu + t;
+            Statistique.bureau.get(id).tempsDeTravail += t;
+            Statistique.bureau.get(id).tempsDeTravail_Courriel += t;
+            Statistique.courriel_enAttente.get(0).heure_debut_traitement = Statistique.date_simu;
+            Statistique.courriel_enAttente.get(0).heure_fin_traitement = Statistique.date_simu + t;
+            Timing.addNewEvenement(Statistique.date_simu + t, new DepartCourriel());
         }
-
-
-
-
-
-
         Statistique.courriel_arrives++;
-
-        Statistique.list_courriel.add(newCourriel);
-
-
-
 
     }
 }

@@ -23,18 +23,34 @@ public class Statistique {
     /****************************************************/
     /**                     VARIABLES                  **/
     /****************************************************/
+
+    // Files d'attente
     static ArrayList<Teleconseiller> bureau = new ArrayList<>();
     static ArrayList<Float> list_poste = new ArrayList<>();
-    static ArrayList<Entite> list_courriel = new ArrayList<>();
-    static ArrayList<Entite> list_appel_telephonique = new ArrayList<>();
+
+    static ArrayList<Entite> courriel_traite = new ArrayList<>();
+    static ArrayList<Entite> appelTelephonique_traite = new ArrayList<>();
+
+    static ArrayList<Entite> courriel_enAttente = new ArrayList<>();
+    static ArrayList<Entite> appelTelephonique_enAttente = new ArrayList<>();
+
+    // Nb Ressources
     static int Nc = 5;
     static int Nat = 5;
     static int N = Nc + Nat;
     static int NatMax = 5;
+
+
     static boolean isEnd = false;
     static float dateFinSimu = 240;
-    static int n_aOccupe = 0; // Nombre de téléconseillers affectés aux appels téléphoniques
-    static int n_cOccupe = 0; // Nombre de téléconseillers affectés aux courriels
+
+    static int n_aAffecte = 0;
+    static int n_cAffecte = 0;
+
+    static int n_aOccupe = 0;
+    static int n_cOccupe = 0;
+
+
     static float date_simu = 0;
     static float date_derniereSimu = 0;
 
@@ -44,8 +60,65 @@ public class Statistique {
         System.out.println("====================================");
         System.out.println("=            STATISTIQUES          =");
         System.out.println("====================================");
+        System.out.println("COURRIEL");
         System.out.println("Nombre de courriels recus dans la nuit : " + n_courrielNuit);
+        System.out.println("Nombre de courriels traités : "+ courriel_traites);
+        System.out.println("Nombre de courriels arrivés : "+courriel_arrives);
+        System.out.println("Nombre de courriels non traités : "+(courriel_arrives-courriel_traites));
+        System.out.println("");
+        System.out.println("APPELS TELEPHONIQUE");
+        System.out.println("Nombre d'appels traités : "+appel_traites);
+        System.out.println("Nombre d'appels arrivés : "+appel_arrives);
+        System.out.println("Nombre d'appels non traités : "+(appel_arrives-appel_traites));
 
     }
 
+
+    public static int getTeleconseillerCourriel() {
+        int id = -1;
+        for (int i = 0; i < Statistique.N; i++) {
+            Teleconseiller teleconseiller = bureau.get(i);
+            if(!teleconseiller.isOccupe && id == -1){
+                teleconseiller.isOccupe = true;
+                teleconseiller.isAffecteCourriel = true;
+                teleconseiller.datefintache = date_simu;
+                id = i;
+            }
+        }
+        return id;
+    }
+
+    public static int getTeleconseillerCourrielFindeTache(float date){
+        for (int i = 0; i < Statistique.N; i++) {
+            Teleconseiller teleconseiller = bureau.get(i);
+            if(teleconseiller.datefintache == date && teleconseiller.isAffecteCourriel)
+                return i;
+        }
+        return -1;
+    }
+
+    public static int getTeleconseillerAppel(){
+        int id = -1;
+        for (int i = 0; i < Statistique.N; i++) {
+            Teleconseiller teleconseiller = bureau.get(i);
+            if(!teleconseiller.isOccupe && id == -1){
+                teleconseiller.isOccupe = true;
+                teleconseiller.isAffecteCourriel = false;
+                teleconseiller.datefintache = date_simu;
+                id = i;
+            }
+        }
+        return id;
+    }
+
+
+
+    public static int getTeleconseillerAppelFindeTache(float date){
+        for (int i = 0; i < Statistique.N; i++) {
+            Teleconseiller teleconseiller = bureau.get(i);
+            if(teleconseiller.datefintache == date && !teleconseiller.isAffecteCourriel)
+                return i;
+        }
+        return -1;
+    }
 }
