@@ -9,14 +9,13 @@ public class Depart extends Event{
     public void run() {
         System.out.println("-> " + this.getClass().getName());
         // Initialisation des téléconseillers
-        Statistique.bureau = new ArrayList<>();
         // Courriel
         for (int i = 0; i < Statistique.Nc; i++) {
-            Statistique.bureau.add(new Teleconseiller(i));
+            Statistique.bureau.add(new Teleconseiller(i,true));
         }
         // Appel téléphonique
         for (int i = Statistique.Nc; i < Statistique.Nat + Statistique.Nc; i++) {
-            Statistique.bureau.add(new Teleconseiller(i));
+            Statistique.bureau.add(new Teleconseiller(i,false));
         }
 
         // Génération de l'événement de FIN

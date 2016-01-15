@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Comparator;
 
 /**
  * Created by Larry on 09/01/2016.
@@ -22,8 +23,10 @@ public class Statistique {
     /****************************************************/
     /**                     VARIABLES                  **/
     /****************************************************/
-    static ArrayList<Teleconseiller> bureau;
-    static ArrayList<Entite> entite = new ArrayList<>();
+    static ArrayList<Teleconseiller> bureau = new ArrayList<>();
+    static ArrayList<Float> list_poste = new ArrayList<>();
+    static ArrayList<Entite> list_courriel = new ArrayList<>();
+    static ArrayList<Entite> list_appel_telephonique = new ArrayList<>();
     static int Nc = 5;
     static int Nat = 5;
     static int N = Nc + Nat;
