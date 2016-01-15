@@ -17,7 +17,7 @@ public class ArriveeAppelTelephonique extends Event {
         int id = Statistique.getTeleconseillerAppel();
 
         // Un téléconseiller est disponible
-        if (id != -1) {
+        if (id != -1 && Statistique.appelTelephonique_enAttente.size() > 0) {
             Statistique.n_aOccupe++;
             float t = Generateur.loi_uniforme(5, 15);
             Statistique.bureau.get(id).datefintache = Statistique.date_simu + t;
