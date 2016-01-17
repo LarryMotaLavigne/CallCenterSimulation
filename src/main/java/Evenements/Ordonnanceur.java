@@ -1,3 +1,8 @@
+package Evenements;
+
+import Evenements.Event;
+import Statistiques.Statistique;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.TreeMap;
@@ -5,10 +10,10 @@ import java.util.TreeMap;
 /**
  * Created by Larry on 08/01/2016.
  */
-public class Timing {
+public class Ordonnanceur {
     private static TreeMap<Float, ArrayList<Event>> time = new TreeMap<>(Comparator.<Float>naturalOrder());
 
-    static void addNewEvenement(Float date, Event event) {
+    public static void addNewEvenement(Float date, Event event) {
         ArrayList<Event> newList = time.get(date);
         if (newList == null || newList.isEmpty()) {
             newList = new ArrayList<>();
@@ -19,11 +24,11 @@ public class Timing {
 //        System.out.println("Ajout de l'evenement " + Evenement.displayEvenementName(idEvent) + " d'identifiant " + idEvent);
     }
 
-    static Event getNextEvenement() {
+    public static Event getNextEvenement() {
         ArrayList<Event> list = time.firstEntry().getValue();
         Event event = null;
         if (list == null || list.isEmpty()) {
-            // Suppression de l'événement dans le TreeMap
+            // Suppression de l'Ã©vÃ©nement dans le TreeMap
             time.remove(time.firstEntry().getKey());
             return getNextEvenement();
         } else {

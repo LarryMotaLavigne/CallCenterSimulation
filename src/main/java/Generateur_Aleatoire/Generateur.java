@@ -1,3 +1,5 @@
+package Generateur_Aleatoire;
+
 import java.util.Random;
 
 /**
@@ -12,6 +14,7 @@ public class Generateur {
     }
 
     private static float loi_exponentielle(double lambda) {
+
         return (float) (-(1 / lambda) * Math.log(1 - rand.nextDouble()));
     }
 
