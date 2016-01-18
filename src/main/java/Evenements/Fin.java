@@ -1,6 +1,7 @@
 package Evenements;
 
 import Evenements.Event;
+import Simulation.Simulation;
 import Statistiques.Statistique;
 
 /**
@@ -9,6 +10,6 @@ import Statistiques.Statistique;
 public class Fin extends Event {
     @Override
     public void run() {
-        Statistique.isEnd = true;
+        Simulation.isEnd = true;
     }
 }

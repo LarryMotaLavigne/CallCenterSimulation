@@ -2,7 +2,10 @@ package Statistiques;
 
 import Entites.Entite;
 import Ressources.Bureau;
+import Ressources.PosteAppel;
+import Ressources.PosteCourriel;
 import Ressources.Teleconseiller;
+import Simulation.Simulation;
 
 import java.util.ArrayList;
 
@@ -21,16 +24,6 @@ public class Statistique {
     public static int appel_traites = 0; // Nombre d'appels trait�s
 
     public static int n_courrielNuit = 0; // Nombre de courriels re�u dans la nuit
-
-
-    /****************************************************/
-    /**                     VARIABLES                  **/
-    /****************************************************/
-    public static boolean isEnd = false;
-    public static float dateFinSimu = 240;
-
-    public static float date_simu = 0;
-    public static float date_derniereSimu = 0;
 
 
     public static void run() {
@@ -61,13 +54,14 @@ public class Statistique {
         System.out.println("");
         System.out.println("---------------------------");
         System.out.println("POSTES");
-        System.out.println("Temps d'occupation moyen des postes : " + posteMoyen());
+        System.out.println("Temps d'occupation moyen des postes : " + utilisationPosteMoyen());
+        System.out.println("Temps d'occupation moyen des postes d'APPELS : " + utilisationPosteAppelMoyen() + " (" + tauxUtilisationPosteAppelMoyen() + "%)");
+        System.out.println("Temps d'occupation moyen des postes de COURRIELS : " + utilisationPosteCourrielMoyen() + " (" + tauxUtilisationPosteCourrielMoyen() + "%)");
     }
 
     private static float courrielAttenteAvantTraitement() {
         int count = 0;
-        for (int i = 0; i < Bureau.courriel_traite.size(); i++) {
-            Entite courriel = Bureau.courriel_traite.get(i);
+        for (Entite courriel : Bureau.courriel_traite) {
             count += (courriel.getHeure_debut_traitement() - courriel.getHeure_arrivee());
         }
         return count / Bureau.courriel_traite.size();
@@ -76,21 +70,57 @@ public class Statistique {
 
     private static float courrielTempsSysteme() {
         int count = 0;
-        for (int i = 0; i < Bureau.courriel_traite.size(); i++) {
-            Entite courriel = Bureau.courriel_traite.get(i);
+        for (Entite courriel : Bureau.courriel_traite) {
             count += (courriel.getHeure_fin_traitement() - courriel.getHeure_arrivee());
         }
         return count / Bureau.courriel_traite.size();
     }
 
-    private static float posteMoyen() {
-        return 0;
+    private static float utilisationPosteMoyen() {
+        float count = 0;
+        for(PosteAppel poste : Bureau.liste_poste_appel){
+            count += poste.getTempsUtilisation();
+        }
+
+        for(PosteCourriel poste : Bureau.liste_poste_courriel){
+            count += poste.getTempsUtilisation();
+        }
+
+        return count / (Bureau.liste_poste_courriel.size() + Bureau.liste_poste_appel.size());
+    }
+
+    private static float utilisationPosteAppelMoyen(){
+        float count = 0;
+        for(PosteAppel poste : Bureau.liste_poste_appel){
+            count += poste.getTempsUtilisation();
+        }
+
+        return count / Bureau.liste_poste_appel.size();
+    }
+
+    private static float tauxUtilisationPosteAppelMoyen(){
+        float utilisationMoyen = utilisationPosteAppelMoyen();
+        return (utilisationMoyen / Simulation.dateFinSimu) * 100;
+    }
+
+    private static float utilisationPosteCourrielMoyen(){
+        float count = 0;
+        for(PosteCourriel poste : Bureau.liste_poste_courriel){
+            count += poste.getTempsUtilisation();
+        }
+
+        return count / Bureau.liste_poste_courriel.size();
+    }
+
+    private static float tauxUtilisationPosteCourrielMoyen(){
+        float utilisationMoyen = utilisationPosteCourrielMoyen();
+        return (utilisationMoyen / Simulation.dateFinSimu) * 100;
     }
 
     private static float travailMoyenAppel() {
         float count = 0;
-        for (int i = 0; i < Bureau.nTeleconseiller; i++) {
-            count += Bureau.liste_teleconseiller.get(i).tempsDeTravail_AppelTelephonique;
+        for (Teleconseiller teleconseiller : Bureau.liste_teleconseiller) {
+            count += teleconseiller.tempsDeTravail_AppelTelephonique;
         }
         return count / Bureau.nTeleconseiller;
     }

@@ -2,6 +2,7 @@ package Ressources;
 
 import Entites.Entite;
 import Statistiques.Statistique;
+import javafx.geometry.Pos;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -12,7 +13,7 @@ import java.util.Deque;
  */
 public class Bureau {
     // Nb Ressources
-    public static int nAffecteCourriel = 5;
+    public static int nAffecteCourriel = 2;
     public static int nAffecteAppel = 5;
     public static int nTeleconseiller = nAffecteCourriel + nAffecteAppel;
     public static int nPosteAppel = 5;
@@ -22,6 +23,10 @@ public class Bureau {
 
     public static ArrayList<Teleconseiller> liste_teleconseiller = new ArrayList<Teleconseiller>();
     public static ArrayList<Float> list_poste = new ArrayList<>(nTeleconseiller);
+
+    public static ArrayList<PosteAppel> liste_poste_appel = new ArrayList<>();
+    public static ArrayList<PosteCourriel> liste_poste_courriel = new ArrayList<>();
+
 
     // Listes de tâches terminées
     public static ArrayList<Entite> courriel_traite = new ArrayList<>();
@@ -34,82 +39,55 @@ public class Bureau {
     public static void init() {
         // Initialisation des téléconseillers
         // Courriel
-        for (int i = 0; i < nAffecteAppel; i++) {
+        for (int i = 0; i < nAffecteCourriel; i++) {
             liste_teleconseiller.add(new Teleconseiller(i,true));
         }
         // Appel téléphonique
-        for (int i = nAffecteAppel; i < nAffecteAppel + nAffecteCourriel; i++) {
+        for (int i = nAffecteCourriel; i < nAffecteAppel + nAffecteCourriel; i++) {
             liste_teleconseiller.add(new Teleconseiller(i,false));
+        }
+
+        // Initialisation des postes
+        // Courriel
+        for (int i = 0; i < nTeleconseiller; i++){
+            liste_poste_courriel.add(new PosteCourriel(i));
+        }
+
+        // Appel téléphonique
+        for (int i = 0; i < nPosteAppel; i++){
+            liste_poste_appel.add(new PosteAppel(i));
         }
     }
 
     public static int getFreeTeleconseillerCourriel() {
-        Teleconseiller teleconseiller = null;
         int id = -1;
 
-        for (Teleconseiller tmpTeleconseiller : Bureau.liste_teleconseiller) {
-            if(!tmpTeleconseiller.isOccupe && tmpTeleconseiller.isAffecteCourriel){
-                teleconseiller = tmpTeleconseiller;
+        for (Teleconseiller teleconseiller : Bureau.liste_teleconseiller) {
+            if(!teleconseiller.isOccupe && teleconseiller.isAffecteCourriel){
                 id = teleconseiller.id;
                 break;
             }
         }
-
         return id;
     }
 
     public static int getFreeTeleconseillerAppel() {
-        Teleconseiller teleconseiller = null;
         int id = -1;
 
-        for (Teleconseiller tmpTeleconseiller : Bureau.liste_teleconseiller) {
-            if(!tmpTeleconseiller.isOccupe && !tmpTeleconseiller.isAffecteCourriel){
-                teleconseiller = tmpTeleconseiller;
+        for (Teleconseiller teleconseiller : Bureau.liste_teleconseiller) {
+            if(!teleconseiller.isOccupe && !teleconseiller.isAffecteCourriel){
                 id = teleconseiller.id;
                 break;
             }
         }
-
         return id;
-    }
-
-    public static int getTeleconseillerAppel(){
-        int id = -1;
-        int count=0;
-        for (int i = 0; i < Bureau.nTeleconseiller; i++) {
-            if(Bureau.liste_teleconseiller.get(i).isOccupe && !Bureau.liste_teleconseiller.get(i).isAffecteCourriel)
-                count++;
-        }
-        if(count < Bureau.nPosteAppel){
-            for (int i = 0; i < Bureau.nTeleconseiller; i++) {
-                Teleconseiller teleconseiller = Bureau.liste_teleconseiller.get(i);
-                if(!teleconseiller.isOccupe && id == -1){
-                    teleconseiller.isOccupe = true;
-                    teleconseiller.isAffecteCourriel = false;
-                    teleconseiller.dateFinTache = Statistique.date_simu;
-                    id = i;
-                }
-            }
-        }
-        return id;
-    }
-
-    public static int getTeleconseillerFindeTache(float date){
-        for (int i = 0; i < Bureau.nTeleconseiller; i++) {
-            Teleconseiller teleconseiller = Bureau.liste_teleconseiller.get(i);
-            if(teleconseiller.dateFinTache == date)
-                return i;
-        }
-        return -1;
     }
 
     public static int affecteFreeConseillerAppelToConseillerCourriel(){
-        Teleconseiller teleconseiller = null;
         int id = -1;
 
-        for (Teleconseiller tmpTeleconseiller : Bureau.liste_teleconseiller) {
-            if (!tmpTeleconseiller.isOccupe && !tmpTeleconseiller.isAffecteCourriel) {
-                teleconseiller = tmpTeleconseiller;
+        for (Teleconseiller teleconseiller : Bureau.liste_teleconseiller) {
+            if (!teleconseiller.isOccupe && !teleconseiller.isAffecteCourriel) {
                 teleconseiller.isOccupe = true;
                 teleconseiller.isAffecteCourriel = true;
                 Bureau.nAffecteCourriel++;
@@ -120,17 +98,14 @@ public class Bureau {
                 break;
             }
         }
-
         return id;
     }
 
     public static int affecteFreeConseillerCourrielToConseillerAppel(){
-        Teleconseiller teleconseiller = null;
         int id = -1;
 
-        for (Teleconseiller tmpTeleconseiller : Bureau.liste_teleconseiller) {
-            if (!tmpTeleconseiller.isOccupe && tmpTeleconseiller.isAffecteCourriel) {
-                teleconseiller = tmpTeleconseiller;
+        for (Teleconseiller teleconseiller : Bureau.liste_teleconseiller) {
+            if (!teleconseiller.isOccupe && teleconseiller.isAffecteCourriel) {
                 teleconseiller.isOccupe = true;
                 teleconseiller.isAffecteCourriel = false;
                 Bureau.nAffecteCourriel--;
@@ -141,7 +116,6 @@ public class Bureau {
                 break;
             }
         }
-
         return id;
     }
 
@@ -153,6 +127,54 @@ public class Bureau {
     public static void setOccupeConseillerAppel(int idTeleconseiller){
         Bureau.liste_teleconseiller.get(idTeleconseiller).isOccupe = true;
         Bureau.nConseillerOccupeAppel++;
+    }
+
+    public static void setFreeConseillerCourriel(int idTeleconseiller){
+        Bureau.liste_teleconseiller.get(idTeleconseiller).isOccupe = false;
+        Bureau.nConseillerOccupeCourriel--;
+    }
+
+    public static void setFreeConseillerAppel(int idTeleconseiller){
+        Bureau.liste_teleconseiller.get(idTeleconseiller).isOccupe = false;
+        Bureau.nConseillerOccupeAppel--;
+    }
+
+    public static int getFreePosteCourriel(){
+        int idPoste = -1;
+
+        for(PosteCourriel poste : Bureau.liste_poste_courriel){
+            if(!poste.isOccupe){
+                idPoste = poste.id;
+            }
+        }
+        return idPoste;
+    }
+
+    public static int getFreePosteAppel(){
+        int idPoste = -1;
+
+        for(PosteAppel poste : Bureau.liste_poste_appel){
+            if(!poste.isOccupe){
+                idPoste = poste.id;
+            }
+        }
+        return idPoste;
+    }
+
+    public static void setOccupePosteCourriel(int idPoste){
+        Bureau.liste_poste_courriel.get(idPoste).isOccupe = true;
+    }
+
+    public static void setOccupePosteAppel(int idPoste){
+        Bureau.liste_poste_appel.get(idPoste).isOccupe = true;
+    }
+
+    public static void setFreePosteCourriel(int idPoste){
+        Bureau.liste_poste_courriel.get(idPoste).isOccupe = false;
+    }
+
+    public static void setFreePosteAppel(int idPoste){
+        Bureau.liste_poste_appel.get(idPoste).isOccupe = false;
     }
 
 }

@@ -1,6 +1,7 @@
 package Evenements;
 
 import Evenements.Event;
+import Simulation.Simulation;
 import Statistiques.Statistique;
 
 import java.util.ArrayList;
@@ -38,8 +39,8 @@ public class Ordonnanceur {
 
             System.out.println("\nEvenement " + event.getClass().getName() + " a lieu. Date = " + key.toString());
 
-            Statistique.date_derniereSimu = Statistique.date_simu;
-            Statistique.date_simu = key;
+            Simulation.date_derniereSimu = Simulation.date_simu;
+            Simulation.date_simu = key;
 
             return event;
         }

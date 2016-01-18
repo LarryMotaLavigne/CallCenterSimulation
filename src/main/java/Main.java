@@ -1,7 +1,8 @@
-import Evenements.Depart;
+import Evenements.Debut;
 import Evenements.Event;
 import Evenements.Ordonnanceur;
 import Ressources.Bureau;
+import Simulation.Simulation;
 import Statistiques.Statistique;
 
 /**
@@ -11,10 +12,10 @@ public class Main {
     public static void main(String[] args) {
         Bureau.init();
 
-        Event event = new Depart();
+        Event event = new Debut();
         event.run();
 
-        while (!Statistique.isEnd) {
+        while (!Simulation.isEnd) {
             event = Ordonnanceur.getNextEvenement();
             event.run();
         }
