@@ -7,6 +7,8 @@ import Ressources.PosteCourriel;
 import Ressources.Teleconseiller;
 import Simulation.Simulation;
 
+import java.util.ArrayList;
+
 public class Statistique {
 
     /****************************************************/
@@ -49,62 +51,109 @@ public class Statistique {
     public static float tauxUtilisationPosteAppelMoyen_globales = 0;
     public static float tauxUtilisationPosteCourrielMoyen_globales = 0;
 
-    public static void run() {
-        System.out.println("====================================");
-        System.out.println("=            STATISTIQUES          =");
-        System.out.println("====================================");
-        System.out.println("");
-        System.out.println("---------------------------");
-        System.out.println("COURRIELS");
-        System.out.println("Nombre de courriels recus dans la nuit : " + n_courrielNuit);
+
+    // Liste des résultats de toutes les itérations
+    public static ArrayList<Resultat> liste_resultat = new ArrayList<Resultat>();
+
+    // Nombre d'itérations
+    public static int nbIterations = 0;
+
+    public static void run(boolean activeDisplay) {
+
+        enregistreResultat();
+
+        if(activeDisplay){
+            System.out.println("====================================");
+            System.out.println("=            STATISTIQUES          =");
+            System.out.println("====================================");
+            System.out.println("");
+            System.out.println("---------------------------");
+            System.out.println("COURRIELS");
+            System.out.println("Nombre de courriels recus dans la nuit : " + n_courrielNuit);
+            System.out.println("Nombre de courriels traites : "+ courriel_traites);
+            System.out.println("Nombre de courriels arrives : "+ courriel_arrives);
+            System.out.println("Nombre de courriels non traites : "+(courriel_arrives-courriel_traites));
+            System.out.println("Temps moyen dans le systeme : " + courrielTempsSysteme());
+            System.out.println("Temps d'attente avant traitement : " + courrielAttenteAvantTraitement());
+            System.out.println("");
+            System.out.println("---------------------------");
+            System.out.println("APPELS TELEPHONIQUES");
+            System.out.println("Nombre d'appels traites : "+ appel_traites);
+            System.out.println("Nombre d'appels arrives : "+ appel_arrives);
+            System.out.println("Nombre d'appels non traites : "+(appel_arrives-appel_traites));
+            System.out.println("Temps moyen dans le systeme : " + appelTempsSysteme());
+            System.out.println("Temps d'attente avant traitement : " + appelAttenteAvantTraitement());
+            System.out.println("");
+            System.out.println("---------------------------");
+            System.out.println("TELECONSEILLERS");
+            System.out.println("Temps moyen de travail : " + travailMoyen());
+            System.out.println("Temps moyen de travail sur les courriels : " + travailMoyenCourriel());
+            System.out.println("Temps moyen de travail sur les appels telephoniques : " + travailMoyenAppel());
+            System.out.println("");
+            System.out.println("---------------------------");
+            System.out.println("POSTES");
+            System.out.println("Temps d'occupation moyen des postes : " + utilisationPosteMoyen());
+            System.out.println("Temps d'occupation moyen des postes d'APPELS : " + utilisationPosteAppelMoyen() + " (" + tauxUtilisationPosteAppelMoyen() + "%)");
+            System.out.println("Temps d'occupation moyen des postes de COURRIELS : " + utilisationPosteCourrielMoyen() + " (" + tauxUtilisationPosteCourrielMoyen() + "%)");
+        }
+
+
         n_courrielNuit_globales += n_courrielNuit;
-        System.out.println("Nombre de courriels traites : "+ courriel_traites);
         courriel_traites_globales += courriel_traites;
-        System.out.println("Nombre de courriels arrives : "+ courriel_arrives);
         courriel_arrives_globales += courriel_arrives;
-        System.out.println("Nombre de courriels non traites : "+(courriel_arrives-courriel_traites));
         courriel_non_traites_globales += (courriel_arrives-courriel_traites);
-        System.out.println("Temps moyen dans le systeme : " + courrielTempsSysteme());
         courriel_temps_systeme_globales += courrielTempsSysteme();
-        System.out.println("Temps d'attente avant traitement : " + courrielAttenteAvantTraitement());
         courriel_attente_avant_traitement_globales += courrielAttenteAvantTraitement();
-        System.out.println("");
-        System.out.println("---------------------------");
-        System.out.println("APPELS TELEPHONIQUES");
-        System.out.println("Nombre d'appels traites : "+ appel_traites);
         appel_traites_globales += appel_traites;
-        System.out.println("Nombre d'appels arrives : "+ appel_arrives);
         appel_arrives_globales += appel_arrives;
-        System.out.println("Nombre d'appels non traites : "+(appel_arrives-appel_traites));
         appel_non_traites_globales += (appel_arrives-appel_traites);
-        System.out.println("Temps moyen dans le systeme : " + appelTempsSysteme());
         appel_temps_systeme_globales += appelTempsSysteme();
-        System.out.println("Temps d'attente avant traitement : " + appelAttenteAvantTraitement());
         appel_attente_avant_traitement_globales += appelAttenteAvantTraitement();
-        System.out.println("");
-        System.out.println("---------------------------");
-        System.out.println("TELECONSEILLERS");
-        System.out.println("Temps moyen de travail : " + travailMoyen());
         travailMoyen_globales += travailMoyen();
-        System.out.println("Temps moyen de travail sur les courriels : " + travailMoyenCourriel());
         travailMoyenCourriel_globales += travailMoyenCourriel();
-        System.out.println("Temps moyen de travail sur les appels telephoniques : " + travailMoyenAppel());
+
         travailMoyenAppel_globales += travailMoyenAppel();
-        System.out.println("");
-        System.out.println("---------------------------");
-        System.out.println("POSTES");
-        System.out.println("Temps d'occupation moyen des postes : " + utilisationPosteMoyen());
+
         utilisationPosteMoyen_globales += utilisationPosteMoyen();
-        System.out.println("Temps d'occupation moyen des postes d'APPELS : " + utilisationPosteAppelMoyen() + " (" + tauxUtilisationPosteAppelMoyen() + "%)");
+
         utilisationPosteAppelMoyen_globales += utilisationPosteAppelMoyen();
         tauxUtilisationPosteAppelMoyen_globales += tauxUtilisationPosteAppelMoyen();
-        System.out.println("Temps d'occupation moyen des postes de COURRIELS : " + utilisationPosteCourrielMoyen() + " (" + tauxUtilisationPosteCourrielMoyen() + "%)");
+
         utilisationPosteCourrielMoyen_globales += utilisationPosteCourrielMoyen();
         tauxUtilisationPosteCourrielMoyen_globales += tauxUtilisationPosteCourrielMoyen();
     }
 
+    private static void enregistreResultat(){
+        Resultat resultat = new Resultat();
+        resultat.setN_courrielNuit(n_courrielNuit);
+        resultat.setCourriel_traites(courriel_traites);
+        resultat.setCourriel_arrives(courriel_arrives);
+        resultat.setCourriel_non_traites(courriel_arrives-courriel_traites);
+        resultat.setCourriel_temps_systeme(courrielTempsSysteme());
+        resultat.setCourriel_temps_systeme(courrielAttenteAvantTraitement());
 
-    public static void runGlobale(int nbIterations){
+        resultat.setAppel_traites(appel_traites);
+        resultat.setAppel_arrives(appel_arrives);
+        resultat.setAppel_non_traites(appel_arrives-appel_traites);
+        resultat.setAppel_temps_systeme(appelTempsSysteme());
+        resultat.setAppel_temps_systeme(appelAttenteAvantTraitement());
+
+        resultat.setTravailMoyen(travailMoyen());
+        resultat.setTravailMoyenCourriel(travailMoyenCourriel());
+        resultat.setTravailMoyenAppel(travailMoyenAppel());
+
+        resultat.setUtilisationPosteMoyen(utilisationPosteMoyen());
+        resultat.setUtilisationPosteCourrielMoyen(utilisationPosteCourrielMoyen());
+        resultat.setUtilisationPosteAppelMoyen(utilisationPosteAppelMoyen());
+        resultat.setTauxUtilisationPosteCourrielMoyen(tauxUtilisationPosteCourrielMoyen());
+        resultat.setTauxUtilisationPosteAppelMoyen(tauxUtilisationPosteAppelMoyen());
+
+        liste_resultat.add(resultat);
+    }
+
+    public static void runGlobale(int nbIter){
+        nbIterations = nbIter;
+
         System.out.println("====================================");
         System.out.println("=       STATISTIQUES GLOBALES      =");
         System.out.println("====================================");
@@ -118,6 +167,10 @@ public class Statistique {
         System.out.println("Nombre de courriels non traites : "+((float)courriel_non_traites_globales/nbIterations));
         System.out.println("Temps moyen d'un courriel dans le systeme : " + courriel_temps_systeme_globales/nbIterations);
         System.out.println("Temps d'attente avant traitement : " + courriel_attente_avant_traitement_globales/nbIterations);
+        System.out.println("Interval de confiance 95% courriels non traités");
+        courrielNonTraiteIntervalleDeConfiance95();
+        System.out.print("Interval de confiance 95% temps d'attente réponse courriel : ");
+        tempsAttenteCourrielIntervalleDeConfiance95();
         System.out.println();
 
 
@@ -129,6 +182,9 @@ public class Statistique {
         System.out.println("Nombre d'appels non traites : "+appel_non_traites_globales/nbIterations);
         System.out.println("Temps moyen dans le systeme : " + appel_temps_systeme_globales/nbIterations);
         System.out.println("Temps d'attente avant traitement : " + appel_attente_avant_traitement_globales/nbIterations);
+        System.out.print("Interval de confiance 95% temps d'attente appel : ");
+        tempsAttenteClientAppelIntervalleDeConfiance95();
+
         System.out.println();
 
 
@@ -138,7 +194,10 @@ public class Statistique {
         System.out.println("Temps moyen de travail : " + travailMoyen_globales/nbIterations);
         System.out.println("Temps moyen de travail sur les courriels : " + travailMoyenCourriel_globales/nbIterations);
         System.out.println("Temps moyen de travail sur les appels telephoniques : " + travailMoyenAppel_globales/nbIterations);
+        System.out.print("Interval de confiance 95% taux occupation : ");
+        tauxOccupationConseillersIntervalleDeConfiance95();
         System.out.println();
+
 
 
         System.out.println("---------------------------");
@@ -147,6 +206,10 @@ public class Statistique {
         System.out.println("Temps d'occupation moyen des postes : " + utilisationPosteMoyen_globales/nbIterations);
         System.out.println("Temps d'occupation moyen des postes d'APPELS : " + utilisationPosteAppelMoyen_globales/nbIterations + " (" + tauxUtilisationPosteAppelMoyen_globales/nbIterations + "%)");
         System.out.println("Temps d'occupation moyen des postes de COURRIELS : " + utilisationPosteCourrielMoyen_globales/nbIterations + " (" + tauxUtilisationPosteCourrielMoyen_globales/nbIterations + "%)");
+        System.out.print("Interval de confiance 95% taux occupation : ");
+        tauxOccupationPosteAppelIntervalleDeConfiance95();
+
+
 
 
 
@@ -251,4 +314,75 @@ public class Statistique {
         }
         return count / Bureau.nTeleconseiller;
     }
+
+    private static void courrielNonTraiteIntervalleDeConfiance95(){
+        double esperance = Statistique.courriel_non_traites_globales / Statistique.nbIterations;
+
+        double count  = 0;
+        for(Resultat resultat : liste_resultat){
+            count +=  (resultat.getCourriel_non_traites() - esperance) * (resultat.getCourriel_non_traites() - esperance);
+        }
+
+        double variance = (1./(nbIterations-1)) * count;
+
+        System.out.println("Pr(" + (esperance - (1.96 * Math.sqrt(variance/nbIterations))) +" <= u <= " +
+                                                                (esperance + (1.96 * Math.sqrt(variance/nbIterations))) + ") = 95%");
+    }
+
+    private static void tempsAttenteClientAppelIntervalleDeConfiance95(){
+        double esperance = Statistique.appel_attente_avant_traitement_globales / Statistique.nbIterations;
+
+        double count  = 0;
+        for(Resultat resultat : liste_resultat){
+            count +=  (resultat.getAppel_attente_avant_traitement() - esperance) * (resultat.getAppel_attente_avant_traitement() - esperance);
+        }
+
+        double variance = (1./(nbIterations-1)) * count;
+
+        System.out.println("Pr(" + (esperance - (1.96 * Math.sqrt(variance/nbIterations))) +" <= u <= " +
+                (esperance + (1.96 * Math.sqrt(variance/nbIterations))) + ") = 95%");
+    }
+
+    private static void tempsAttenteCourrielIntervalleDeConfiance95(){
+        double esperance = Statistique.courriel_attente_avant_traitement_globales / Statistique.nbIterations;
+
+        double count  = 0;
+        for(Resultat resultat : liste_resultat){
+            count +=  (resultat.getCourriel_attente_avant_traitement() - esperance) * (resultat.getCourriel_attente_avant_traitement() - esperance);
+        }
+
+        double variance = (1./(nbIterations-1)) * count;
+
+        System.out.println("Pr(" + (esperance - (1.96 * Math.sqrt(variance/nbIterations))) +" <= u <= " +
+                (esperance + (1.96 * Math.sqrt(variance/nbIterations))) + ") = 95%");
+    }
+
+    private static void tauxOccupationConseillersIntervalleDeConfiance95(){
+        double esperance = (Statistique.travailMoyen_globales / Statistique.nbIterations);
+
+        double count  = 0;
+        for(Resultat resultat : liste_resultat){
+            count +=  (resultat.getTravailMoyen() - esperance) * (resultat.getTravailMoyen() - esperance);
+        }
+
+        double variance = (1./(nbIterations-1)) * count;
+
+        System.out.println("Pr(" + 100*(esperance - (1.96 * Math.sqrt(variance/nbIterations)))/ (Simulation.dateFinSimu - Simulation.dateDebutSimu) +" <= u <= " +
+                (esperance + 100*(1.96 * Math.sqrt(variance/nbIterations)))/(Simulation.dateFinSimu - Simulation.dateDebutSimu) + ") = 95%");
+    }
+
+    private static void tauxOccupationPosteAppelIntervalleDeConfiance95(){
+        double esperance = Statistique.tauxUtilisationPosteAppelMoyen_globales / Statistique.nbIterations;
+
+        double count  = 0;
+        for(Resultat resultat : liste_resultat){
+            count +=  (resultat.getTauxUtilisationPosteAppelMoyen() - esperance) * (resultat.getTauxUtilisationPosteAppelMoyen() - esperance);
+        }
+
+        double variance = (1./(nbIterations-1)) * count;
+
+        System.out.println("Pr(" + (esperance - (1.96 * Math.sqrt(variance/nbIterations))) +" <= u <= " +
+                (esperance + (1.96 * Math.sqrt(variance/nbIterations))) + ") = 95%");
+    }
+
 }
