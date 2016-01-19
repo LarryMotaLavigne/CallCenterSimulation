@@ -6,9 +6,6 @@ import Ressources.Bureau;
 import Simulation.Simulation;
 import Statistiques.Statistique;
 
-/**
- * Created by Larry on 11/01/2016.
- */
 public class DepartAppelTelephonique extends Event {
     private Entite appel = null;
     private int idTeleconseiller = 0;
@@ -29,18 +26,18 @@ public class DepartAppelTelephonique extends Event {
         appel.setHeure_fin_traitement(Simulation.dateFinSimu);
         Bureau.appelTelephonique_traite.add(appel);
         Statistique.appel_traites++;
-        System.out.println("=========================== " + Statistique.appel_traites);
+
         /*****************************************************************************/
         /*******************   FIN DE TACHE DU TELECONSEILLER    *********************/
         /*****************************************************************************/
         Bureau.liste_teleconseiller.get(idTeleconseiller).tempsDeTravail_AppelTelephonique += Simulation.date_simu - appel.getHeure_debut_traitement();
         Bureau.liste_teleconseiller.get(idTeleconseiller).tempsDeTravail += Simulation.date_simu - appel.getHeure_debut_traitement();
-
         Bureau.liste_poste_appel.get(idPosteAppel).addTempsUtilisation(Simulation.date_simu - appel.getHeure_debut_traitement());
+
+
         /*****************************************************************************/
         /*******************            TACHE SUIVANTE           *********************/
         /*****************************************************************************/
-
         // S'il y a un appel, il est prioritaire
         if (!Bureau.appelTelephonique_enAttente.isEmpty()) {
             Entite waitingAppel = Bureau.appelTelephonique_enAttente.pollFirst();

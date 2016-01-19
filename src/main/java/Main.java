@@ -5,21 +5,25 @@ import Ressources.Bureau;
 import Simulation.Simulation;
 import Statistiques.Statistique;
 
-/**
- * Created by Larry on 08/01/2016.
- */
 public class Main {
     public static void main(String[] args) {
-        Bureau.init();
+        int nbIterations = 100; // Nombre d'itérations
+        int Nc = 2; // Nombre de téléconseillers attribués aux courriels
+        int Na = 5; // Nombre de téléconseillers attribués aux appels
+        int NaMax = 5; // Quantité de postes disponibles pour les appels téléphoniques
 
-        Event event = new Debut();
-        event.run();
+        for (int i = 0; i < nbIterations; i++) {
+            Bureau.init(Nc,Na,NaMax);
 
-        while (!Simulation.isEnd) {
-            event = Ordonnanceur.getNextEvenement();
+            Event event = new Debut();
             event.run();
-        }
 
-        Statistique.run();
+            while (!Simulation.isEnd) {
+                event = Ordonnanceur.getNextEvenement();
+                event.run();
+            }
+            Statistique.run();
+        }
+        Statistique.runGlobale(nbIterations);
     }
 }

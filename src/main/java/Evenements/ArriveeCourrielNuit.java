@@ -6,12 +6,13 @@ import Ressources.Bureau;
 import Simulation.Simulation;
 import Statistiques.Statistique;
 
-/**
- * Created by Larry on 11/01/2016.
- */
 public class ArriveeCourrielNuit extends Event {
     @Override
     public void run() {
+
+        /*****************************************************************************/
+        /*******************       RECEPTION d'un COURRIEL       *********************/
+        /*****************************************************************************/
         Entite newCourriel = new Entite();
         newCourriel.setHeure_arrivee(Simulation.date_simu);
         Bureau.courriel_enAttente.addLast(newCourriel); // Insertion � la fin
@@ -19,10 +20,8 @@ public class ArriveeCourrielNuit extends Event {
         Statistique.courriel_arrives++;
 
         /*****************************************************************************/
-        /*******************            DEPART COURRIEL          *********************/
+        /*******************              TRAITEMENT             *********************/
         /*****************************************************************************/
-        // Génération d'un nouveau départ de Courriel
-
         if(Bureau.nConseillerOccupeCourriel < Bureau.nAffecteCourriel) {
             newCourriel = Bureau.courriel_enAttente.pollLast();
             newCourriel.setHeure_debut_traitement(Simulation.date_simu);

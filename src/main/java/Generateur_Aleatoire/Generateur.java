@@ -2,9 +2,6 @@ package Generateur_Aleatoire;
 
 import java.util.Random;
 
-/**
- * Created by Larry on 09/01/2016.
- */
 public class Generateur {
     private static Random rand = new Random();
 

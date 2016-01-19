@@ -3,28 +3,34 @@ package Evenements;
 import Entites.Entite;
 import Generateur_Aleatoire.Generateur;
 import Ressources.Bureau;
-import Ressources.Teleconseiller;
 import Simulation.Simulation;
 import Statistiques.Statistique;
 
-/**
- * Created by Larry on 11/01/2016.
- */
+
 public class ArriveeAppelTelephonique extends Event {
     @Override
     public void run() {
+        /*****************************************************************************/
+        /*******************       RECEPTION d'un APPEL       *********************/
+        /*****************************************************************************/
         Entite newAppel = new Entite();
         newAppel.setHeure_arrivee(Simulation.date_simu);
-        Bureau.appelTelephonique_enAttente.addLast(newAppel); // Insertion à la fin
+        Bureau.appelTelephonique_enAttente.addLast(newAppel); // Insertion à la liste des appels en attente
         Statistique.appel_arrives++;
-        System.out.println(Statistique.appel_arrives);
 
-        // Génération d'une nouvelle arrivée d'appel
+        /*****************************************************************************/
+        /*******************       NOUVEL EVENEMENT ARRIVEE      *********************/
+        /*****************************************************************************/
         float t_c = Generateur.loi_exponentielle_appelTelephonique(Simulation.date_simu);
         Ordonnanceur.addNewEvenement(Simulation.date_simu + t_c, new ArriveeAppelTelephonique());
 
 
-        if(Bureau.nAffecteAppel == 0 && Bureau.nConseillerOccupeCourriel == 0){
+        /*****************************************************************************/
+        /*******************              TRAITEMENT             *********************/
+        /*****************************************************************************/
+
+        // Si plus personne ne travaille, on affecte une personne pour cet appel
+        if (Bureau.nAffecteAppel == 0 && Bureau.nConseillerOccupeCourriel == 0) {
             newAppel = Bureau.appelTelephonique_enAttente.pollLast();
             newAppel.setHeure_debut_traitement(Simulation.date_simu);
 
@@ -35,8 +41,7 @@ public class ArriveeAppelTelephonique extends Event {
 
             float t = Generateur.loi_uniforme(5, 15);
             Ordonnanceur.addNewEvenement(Simulation.date_simu + t, new DepartAppelTelephonique(newAppel, idTeleconseiller, idPosteAppel));
-        }
-        else if(Bureau.nConseillerOccupeAppel < Bureau.nAffecteAppel) {
+        } else if (Bureau.nConseillerOccupeAppel < Bureau.nAffecteAppel) {
             // Génération d'un nouveau départ d'appel
             newAppel = Bureau.appelTelephonique_enAttente.pollLast();
             newAppel.setHeure_debut_traitement(Simulation.date_simu);

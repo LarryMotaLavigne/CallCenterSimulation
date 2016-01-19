@@ -1,16 +1,10 @@
 package Evenements;
 
-import Evenements.Event;
 import Simulation.Simulation;
-import Statistiques.Statistique;
-
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.TreeMap;
 
-/**
- * Created by Larry on 08/01/2016.
- */
 public class Ordonnanceur {
     private static TreeMap<Float, ArrayList<Event>> time = new TreeMap<>(Comparator.<Float>naturalOrder());
 
@@ -21,8 +15,6 @@ public class Ordonnanceur {
         }
         newList.add(event);
         time.put(date, newList);
-
-//        System.out.println("Ajout de l'evenement " + Evenement.displayEvenementName(idEvent) + " d'identifiant " + idEvent);
     }
 
     public static Event getNextEvenement() {
@@ -37,13 +29,17 @@ public class Ordonnanceur {
             list.remove(0);
             Float key = time.firstEntry().getKey();
 
-            System.out.println("\nEvenement " + event.getClass().getName() + " a lieu. Date = " + key.toString());
+            //System.out.println("\nEvenement " + event.getClass().getName() + " a lieu. Date = " + key.toString());
 
-            Simulation.date_derniereSimu = Simulation.date_simu;
             Simulation.date_simu = key;
 
             return event;
         }
+    }
+
+    public static void clearAndRestart() {
+        time.clear();
+        time = new TreeMap<>(Comparator.<Float>naturalOrder());
     }
 
 }

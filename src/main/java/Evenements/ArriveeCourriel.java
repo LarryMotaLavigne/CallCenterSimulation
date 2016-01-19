@@ -6,9 +6,7 @@ import Ressources.Bureau;
 import Simulation.Simulation;
 import Statistiques.Statistique;
 
-/**
- * Created by Larry on 11/01/2016.
- */
+
 public class ArriveeCourriel extends Event {
     @Override
     public void run() {
@@ -17,7 +15,7 @@ public class ArriveeCourriel extends Event {
         /*****************************************************************************/
         Entite newCourriel = new Entite();
         newCourriel.setHeure_arrivee(Simulation.date_simu);
-        Bureau.courriel_enAttente.addLast(newCourriel); // Insertion à la fin de la queue
+        Bureau.courriel_enAttente.addLast(newCourriel); // Insertion à la liste des courriels en attente
         Statistique.courriel_arrives++;
 
 

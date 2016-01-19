@@ -1,8 +1,5 @@
 package Ressources;
 
-/**
- * Created by Florian on 18/01/2016.
- */
 public class Poste {
     protected int id;
     protected float tempsUtilisation;

@@ -1,9 +1,5 @@
 package Ressources;
 
-/**
- * Created by Larry on 08/01/2016.
- */
-
 public class Teleconseiller {
     static final boolean COURRIEL = true;
     static final boolean APPEL = false;
@@ -14,7 +10,6 @@ public class Teleconseiller {
     public float tempsDeTravail_AppelTelephonique;
     public boolean isOccupe;
     public boolean isAffecteCourriel;
-    public float dateFinTache;
 
     public Teleconseiller(int id,boolean affecteCourriel) {
         this.id = id;
