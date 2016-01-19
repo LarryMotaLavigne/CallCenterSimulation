@@ -127,8 +127,8 @@ public class Statistique {
         System.out.println("Nombre d'appels traites : "+ appel_traites_globales/nbIterations);
         System.out.println("Nombre d'appels arrives : "+ appel_arrives_globales/nbIterations);
         System.out.println("Nombre d'appels non traites : "+appel_non_traites_globales/nbIterations);
-        System.out.println("Temps moyen dans le systeme : " + appel_temps_systeme_globales);
-        System.out.println("Temps d'attente avant traitement : " + appel_attente_avant_traitement_globales);
+        System.out.println("Temps moyen dans le systeme : " + appel_temps_systeme_globales/nbIterations);
+        System.out.println("Temps d'attente avant traitement : " + appel_attente_avant_traitement_globales/nbIterations);
         System.out.println();
 
 
