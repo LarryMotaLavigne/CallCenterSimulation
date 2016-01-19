@@ -167,9 +167,9 @@ public class Statistique {
         System.out.println("Nombre de courriels non traites : "+((float)courriel_non_traites_globales/nbIterations));
         System.out.println("Temps moyen d'un courriel dans le systeme : " + courriel_temps_systeme_globales/nbIterations);
         System.out.println("Temps d'attente avant traitement : " + courriel_attente_avant_traitement_globales/nbIterations);
-        System.out.println("Interval de confiance 95% courriels non traités");
+        System.out.print("Intervalle de confiance 95% courriels non traités : ");
         courrielNonTraiteIntervalleDeConfiance95();
-        System.out.print("Interval de confiance 95% temps d'attente réponse courriel : ");
+        System.out.print("Intervalle de confiance 95% temps d'attente réponse courriel : ");
         tempsAttenteCourrielIntervalleDeConfiance95();
         System.out.println();
 
@@ -182,9 +182,10 @@ public class Statistique {
         System.out.println("Nombre d'appels non traites : "+appel_non_traites_globales/nbIterations);
         System.out.println("Temps moyen dans le systeme : " + appel_temps_systeme_globales/nbIterations);
         System.out.println("Temps d'attente avant traitement : " + appel_attente_avant_traitement_globales/nbIterations);
-        System.out.print("Interval de confiance 95% temps d'attente appel : ");
+        System.out.print("Intervalle de confiance 95% appels traités : ");
+        appelTraiteIntervalleDeConfiance95();
+        System.out.print("Intervalle de confiance 95% temps d'attente appel : ");
         tempsAttenteClientAppelIntervalleDeConfiance95();
-
         System.out.println();
 
 
@@ -194,7 +195,7 @@ public class Statistique {
         System.out.println("Temps moyen de travail : " + travailMoyen_globales/nbIterations);
         System.out.println("Temps moyen de travail sur les courriels : " + travailMoyenCourriel_globales/nbIterations);
         System.out.println("Temps moyen de travail sur les appels telephoniques : " + travailMoyenAppel_globales/nbIterations);
-        System.out.print("Interval de confiance 95% taux occupation : ");
+        System.out.print("Intervalle de confiance 95% taux occupation : ");
         tauxOccupationConseillersIntervalleDeConfiance95();
         System.out.println();
 
@@ -206,7 +207,7 @@ public class Statistique {
         System.out.println("Temps d'occupation moyen des postes : " + utilisationPosteMoyen_globales/nbIterations);
         System.out.println("Temps d'occupation moyen des postes d'APPELS : " + utilisationPosteAppelMoyen_globales/nbIterations + " (" + tauxUtilisationPosteAppelMoyen_globales/nbIterations + "%)");
         System.out.println("Temps d'occupation moyen des postes de COURRIELS : " + utilisationPosteCourrielMoyen_globales/nbIterations + " (" + tauxUtilisationPosteCourrielMoyen_globales/nbIterations + "%)");
-        System.out.print("Interval de confiance 95% taux occupation : ");
+        System.out.print("Intervalle de confiance 95% taux occupation des postes appels : ");
         tauxOccupationPosteAppelIntervalleDeConfiance95();
 
 
@@ -329,6 +330,20 @@ public class Statistique {
                                                                 (esperance + (1.96 * Math.sqrt(variance/nbIterations))) + ") = 95%");
     }
 
+    private static void appelTraiteIntervalleDeConfiance95(){
+        double esperance = Statistique.appel_traites_globales / Statistique.nbIterations;
+
+        double count  = 0;
+        for(Resultat resultat : liste_resultat){
+            count +=  (resultat.getAppel_traites() - esperance) * (resultat.getAppel_traites() - esperance);
+        }
+
+        double variance = (1./(nbIterations-1)) * count;
+
+        System.out.println("Pr(" + (esperance - (1.96 * Math.sqrt(variance/nbIterations))) +" <= u <= " +
+                (esperance + (1.96 * Math.sqrt(variance/nbIterations))) + ") = 95%");
+    }
+
     private static void tempsAttenteClientAppelIntervalleDeConfiance95(){
         double esperance = Statistique.appel_attente_avant_traitement_globales / Statistique.nbIterations;
 
@@ -368,7 +383,7 @@ public class Statistique {
         double variance = (1./(nbIterations-1)) * count;
 
         System.out.println("Pr(" + 100*(esperance - (1.96 * Math.sqrt(variance/nbIterations)))/ (Simulation.dateFinSimu - Simulation.dateDebutSimu) +" <= u <= " +
-                (esperance + 100*(1.96 * Math.sqrt(variance/nbIterations)))/(Simulation.dateFinSimu - Simulation.dateDebutSimu) + ") = 95%");
+                100*(esperance + (1.96 * Math.sqrt(variance/nbIterations)))/(Simulation.dateFinSimu - Simulation.dateDebutSimu) + ") = 95%");
     }
 
     private static void tauxOccupationPosteAppelIntervalleDeConfiance95(){

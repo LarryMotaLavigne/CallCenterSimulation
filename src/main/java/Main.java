@@ -8,9 +8,10 @@ import Statistiques.Statistique;
 public class Main {
     public static void main(String[] args) {
         int nbIterations = 10000; // Nombre d'itérations
-        int Nc = 5; // Nombre de téléconseillers attribués aux courriels
-        int Na = 7; // Nombre de téléconseillers attribués aux appels
-        int NaMax = 7; // Quantité de postes disponibles pour les appels téléphoniques
+        int Nc = 8; // Nombre de téléconseillers attribués aux courriels
+        int Na = 3; // Nombre de téléconseillers attribués aux appels
+        // ATTENTION : NaMax doit être >= à Na
+        int NaMax = 11; // Quantité de postes disponibles pour les appels téléphoniques
 
         Simulation.dateDebutSimu = 0;
         Simulation.date_simu = Simulation.dateDebutSimu;
