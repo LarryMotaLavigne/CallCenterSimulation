@@ -31,7 +31,7 @@ Toutefois, il existe une limite de postes pour les appels téléphoniques car il
 **Après 60 jours**, le paramètre de la loi change et passe à **lambda=0.2**.
 
 
-### Main
+### Main
 La classe `main` définit un ensemble de paramètres :
 * un nombre d'itérations
 * un nombre de téléconseillers disponible pour les courriels
